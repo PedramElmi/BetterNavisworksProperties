@@ -1,0 +1,37 @@
+﻿using Autodesk.Navisworks.Api;
+using BetterPropertiesDockpane.Helper;
+using System;
+
+namespace BetterPropertiesDockpane.MVVM.ViewModels
+{
+    public class BetterPropertiesViewModel : ObservableObject
+    {
+
+
+        private ModelItemCollection _selectedModelItems;
+
+        public ModelItemCollection SelectedModelItems
+        {
+            get => _selectedModelItems;
+            private set { _selectedModelItems = value; OnPropertyChanged(); }
+        }
+
+
+
+
+
+        public BetterPropertiesViewModel()
+        {
+            Application.ActiveDocument.CurrentSelection.Changed += this.CurrentSelection_Changed;
+        }
+
+        private void CurrentSelection_Changed(object sender, EventArgs e)
+        {
+            // if the active document still not loaded then do nothing
+            if (!Application.ActiveDocument.IsClear)
+            {
+                SelectedModelItems = ((Document)sender).CurrentSelection.SelectedItems;
+            }
+        }
+    }
+}
