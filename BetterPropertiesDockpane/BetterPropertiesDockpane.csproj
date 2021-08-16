@@ -68,7 +68,6 @@
     <None Include="ProjectBuildEvents\PostBuildEvent.bat" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Images\" />
     <Folder Include="MVVM\Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assemblies\Autodesk.Navisworks.Api.dll" />
+    <Content Include="Images\Screenshot 2021-08-16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
