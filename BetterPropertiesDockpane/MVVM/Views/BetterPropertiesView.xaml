@@ -16,38 +16,40 @@
     </UserControl.DataContext>
 
     <UserControl.Resources>
-
-        <DataTemplate
-            x:Key="expanderHeader">
-            <ContentPresenter
-                Content="{Binding}" TextBlock.FontSize="18" TextBlock.FontWeight="Bold" />
-        </DataTemplate>
-
         <Style
-            TargetType="Expander">
+            TargetType="TextBlock">
             <Setter
-                Property="HeaderTemplate"
-                Value="{StaticResource expanderHeader}" />
+                Property="FontFamily"
+                Value="Tahoma" />
         </Style>
-
     </UserControl.Resources>
 
     <ScrollViewer
         HorizontalScrollBarVisibility="Auto"
         VerticalScrollBarVisibility="Auto">
         <ListView
-            ItemsSource="{Binding Path=SelectedModelItems}">
+            ItemsSource="{Binding Path=SelectedModelItems}"
+            SelectionMode="Extended">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Expander
-                        Header="{Binding DisplayName}">
+                    <Expander>
+                        <Expander.Header>
+                            <TextBlock
+                                Text="{Binding Path=DisplayName}"
+                                FontSize="16"
+                                FontWeight="Bold" />
+                        </Expander.Header>
                         <ListView
                             ItemsSource="{Binding Path=PropertyCategories}"
                             SelectionMode="Extended">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Expander
-                                        Header="{Binding DisplayName}">
+                                    <Expander>
+                                        <Expander.Header>
+                                            <TextBlock
+                                                Text="{Binding Path=DisplayName}"
+                                                FontSize="14" />
+                                        </Expander.Header>
                                         <ListView
                                             ItemsSource="{Binding Path=Properties}"
                                             SelectionMode="Extended">
