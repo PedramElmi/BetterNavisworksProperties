@@ -34,13 +34,14 @@
   <ItemGroup>
     <Reference Include="Autodesk.Navisworks.Api">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2022\Autodesk.Navisworks.Api.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -61,14 +62,11 @@
     <Compile Include="MVVM\Views\BetterPropertiesView.xaml.cs">
       <DependentUpon>BetterPropertiesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MVVM\Views\Converters\ModelItemToModelItemIconImage.cs" />
+    <Compile Include="MVVM\Views\Converters\PropertyValueToCorrectedValueConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ProjectBuildEvents\DeletePluginFilesInNavisworksFolder.bat" />
-    <None Include="ProjectBuildEvents\PostBuildEvent.bat" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\" />
     <Folder Include="MVVM\Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -79,9 +77,33 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assemblies\Autodesk.Navisworks.Api.dll" />
+    <Resource Include="Images\GUID-197CB0CC-4CBB-4308-A42C-0B7046B05392.png" />
+    <Resource Include="Images\GUID-2D8532F2-122E-4218-9E22-44C4BC834F7C.png" />
+    <Resource Include="Images\GUID-3BC23219-691D-4C01-A03C-0B0D0208FE9E.png" />
+    <Resource Include="Images\GUID-45488727-EFBB-42D4-BDF8-3C49E3C314AF.png" />
+    <Resource Include="Images\GUID-4BCD09CF-FF0C-4B88-B473-B1025A17C100.png" />
+    <Resource Include="Images\GUID-7AD510FA-7C48-415E-9579-D996820D8BC1.png" />
+    <Resource Include="Images\GUID-8C08B821-22E1-45BA-9421-D9C5E577D4B0.png" />
+    <Resource Include="Images\GUID-A12DD8E6-A4BE-401A-BB86-6C80E4C4C1FB.png" />
+    <Resource Include="Images\GUID-D66522E4-D61B-45E1-A44B-424663BAE11C.png" />
+    <Resource Include="Images\GUID-F178FAC1-ACD0-457B-8831-42ADBD7465FE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\NavisworksDevHelper\NavisworksDevHelper.csproj">
+      <Project>{f6b3f0f1-6c96-4be1-99a7-ecf299b66f14}</Project>
+      <Name>NavisworksDevHelper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>call "$(ProjectDir)\ProjectBuildEvents\DeletePluginFilesInNavisworksFolder.bat"</PreBuildEvent>
+    <PreBuildEvent>set addinPath=$(OutDir)
+
+if exist "%25addinPath%25" ( del "%25addinPath%25\*.*" /q /s )
+
+pause</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

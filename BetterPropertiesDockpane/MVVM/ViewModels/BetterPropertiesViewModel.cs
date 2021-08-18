@@ -23,12 +23,13 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
         public BetterPropertiesViewModel()
         {
             Application.ActiveDocument.CurrentSelection.Changed += this.CurrentSelection_Changed;
+            Application.ActiveDocumentChanged += this.CurrentSelection_Changed;
         }
 
         private void CurrentSelection_Changed(object sender, EventArgs e)
         {
-            // if the active document still not loaded then do nothing
-            if (!Application.ActiveDocument.IsClear)
+            // if a real document still not loaded then do nothing
+            if (Application.ActiveDocument != null && !Application.ActiveDocument.IsClear)
             {
                 SelectedModelItems = ((Document)sender).CurrentSelection.SelectedItems;
             }

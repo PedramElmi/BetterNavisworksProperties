@@ -3,4 +3,4 @@
 
  - Under developement
 
-![Sample](https://github.com/PedramElmi/BetterNavisworksProperties/raw/main/Resources/Screenshot%202021-08-16.png)
+![Sample](https://github.com/PedramElmi/BetterNavisworksProperties/raw/main/Resources/Screenshot.png)

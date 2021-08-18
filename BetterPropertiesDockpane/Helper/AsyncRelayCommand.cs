@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BetterPropertiesDockpane.Helper
 {
-    class AsyncRelayCommand
+    public class AsyncRelayCommand
     {
         // Not Needed yet
     }
