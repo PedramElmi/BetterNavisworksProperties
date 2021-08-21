@@ -25,7 +25,7 @@
         </Style>
 
         <!--#region Converters -->
-        
+
         <converters:PropertyValueToCorrectedValueConverter
             x:Key="Value2CorrectedValueConverter" />
 
@@ -34,87 +34,98 @@
 
         <!--#endregion-->
 
-        
-        
-
     </UserControl.Resources>
 
-    <ScrollViewer
-        HorizontalScrollBarVisibility="Auto"
-        VerticalScrollBarVisibility="Auto">
-
+    <DockPanel>
         <!--list of selected model items-->
-        <ListView
-            ItemsSource="{Binding Path=SelectedModelItems}"
-            SelectionMode="Extended">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Expander>
-                        <Expander.Header>
+        <Button
+            DockPanel.Dock="Bottom"
+            Content="Save"
+            FontFamily="Tahoma"
+            Command="{Binding Path=SaveAsJsonFileCommand}"
+            FontSize="14"
+            FontWeight="Normal"
+            FontStyle="Normal"
+            Background="#FFF3BB6A" />
+        <ScrollViewer
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto">
+            <ListView
+                ItemsSource="{Binding Path=SelectedModelItems}"
+                SelectionMode="Extended">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <Expander.Header>
 
-                            <StackPanel
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Center">
+                                <StackPanel
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
 
-                                <Image Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type StackPanel}}, Path=ActualHeight}"
-                                    Margin="0,0,5,0"
-                                    Source="{Binding Converter={StaticResource ModelItem2IconImage}}">
-                                </Image>
+                                    <Image
+                                        Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type StackPanel}}, Path=ActualHeight}"
+                                        Margin="0,0,5,0"
+                                        Source="{Binding Converter={StaticResource ModelItem2IconImage}}">
+                                    </Image>
 
-                                <TextBlock HorizontalAlignment="Center"
-                                    Text="{Binding Path=DisplayName}"
-                                    FontSize="14"
-                                    FontWeight="Bold" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        Text="{Binding Path=DisplayName}"
+                                        FontSize="14"
+                                        FontWeight="Bold" />
 
-                            </StackPanel>
+                                </StackPanel>
 
-                        </Expander.Header>
-                        <!--Categories-->
-                        <ListView
-                            ItemsSource="{Binding Path=PropertyCategories}"
-                            SelectionMode="Extended">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Expander>
-                                        <Expander.Header>
-                                            <TextBlock
-                                                Text="{Binding Path=DisplayName}"
-                                                FontSize="12"
-                                                FontWeight="Bold" />
-                                        </Expander.Header>
+                            </Expander.Header>
+                            <!--Categories-->
+                            <ListView
+                                ItemsSource="{Binding Path=PropertyCategories}"
+                                SelectionMode="Extended">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Expander>
+                                            <Expander.Header>
+                                                <TextBlock
+                                                    Text="{Binding Path=DisplayName}"
+                                                    FontSize="12"
+                                                    FontWeight="Bold" />
+                                            </Expander.Header>
 
-                                        <!--properties-->
-                                        <DataGrid SelectionMode="Extended" SelectionUnit="Cell"
-                                            ItemsSource="{Binding Path=Properties, Mode=OneWay}"
-                                            AutoGenerateColumns="False">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn
-                                                    Header="DisplayName"
-                                                    Binding="{Binding Path=DisplayName, Mode=OneWay}" />
-                                                <DataGridTextColumn
-                                                    Header="Value"
-                                                    Binding="{Binding Path=Value, Mode=OneWay, Converter={StaticResource ResourceKey=Value2CorrectedValueConverter}}" />
-                                                <DataGridTextColumn
-                                                    Header="Value Type"
-                                                    Binding="{Binding Path=Value.DataType, Mode=OneWay}" />
-                                                <DataGridTextColumn
-                                                    Header="Name"
-                                                    Binding="{Binding Path=Name, Mode=OneWay}"
-                                                    Visibility="Hidden" />
-                                                <DataGridCheckBoxColumn
-                                                    Header="IsReadOnly"
-                                                    Binding="{Binding Path=IsReadOnly, Mode=OneWay}" />
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                    </Expander>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </Expander>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-
-    </ScrollViewer>
+                                            <!--properties-->
+                                            <DataGrid
+                                                SelectionMode="Extended"
+                                                SelectionUnit="Cell"
+                                                ItemsSource="{Binding Path=Properties, Mode=OneWay}"
+                                                AutoGenerateColumns="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn
+                                                        Header="DisplayName"
+                                                        Binding="{Binding Path=DisplayName, Mode=OneWay}" />
+                                                    <DataGridTextColumn
+                                                        Header="Value"
+                                                        Binding="{Binding Path=Value, Mode=OneWay, Converter={StaticResource ResourceKey=Value2CorrectedValueConverter}}" />
+                                                    <DataGridTextColumn
+                                                        Header="Value Type"
+                                                        Binding="{Binding Path=Value.DataType, Mode=OneWay}" />
+                                                    <DataGridTextColumn
+                                                        Header="Name"
+                                                        Binding="{Binding Path=Name, Mode=OneWay}"
+                                                        Visibility="Hidden" />
+                                                    <DataGridCheckBoxColumn
+                                                        Header="IsReadOnly"
+                                                        Binding="{Binding Path=IsReadOnly, Mode=OneWay}" />
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Expander>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Expander>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+    </DockPanel>
+    
 
 </UserControl>
