@@ -22,7 +22,7 @@ namespace BetterPropertiesDockpane.Helper
 
 
         #region ICommand Interface
-        event EventHandler ICommand.CanExecuteChanged
+        public event EventHandler CanExecuteChanged
         {
             add
             {
@@ -35,16 +35,17 @@ namespace BetterPropertiesDockpane.Helper
             }
         }
 
-        bool ICommand.CanExecute(object parameter)
+        public bool CanExecute(object parameter)
         {
             return _canExecute == null || _canExecute(parameter);
         }
 
-        void ICommand.Execute(object parameter)
+        public void Execute(object parameter)
         {
             _execute.Invoke(parameter);
         }
         #endregion
+
     }
 
 }

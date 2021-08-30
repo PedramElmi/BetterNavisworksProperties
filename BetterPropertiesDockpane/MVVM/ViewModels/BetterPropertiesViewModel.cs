@@ -6,41 +6,68 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
 using Windows = System.Windows;
+using System.Threading.Tasks;
 
 namespace BetterPropertiesDockpane.MVVM.ViewModels
 {
     public class BetterPropertiesViewModel : ObservableObject
     {
-
-
+        #region Fields
         private ModelItemCollection _selectedModelItems;
+        private bool _isSavingJsonFile;
+        #endregion
 
+        #region Properties
         public ModelItemCollection SelectedModelItems
         {
             get => _selectedModelItems;
             private set { _selectedModelItems = value; OnPropertyChanged(); }
         }
-
-
+        public bool IsSavingJsonFile
+        {
+            get => _isSavingJsonFile;
+            set
+            {
+                _isSavingJsonFile = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand SaveAsJsonFileCommand { get; set; }
 
+        #endregion
 
-
-
+        #region Constructors
 
         public BetterPropertiesViewModel()
         {
-            Application.ActiveDocument.CurrentSelection.Changed += this.CurrentSelection_Changed;
-            Application.ActiveDocumentChanged += this.CurrentSelection_Changed;
+            IsSavingJsonFile = false;
+
+            Application.ActiveDocument.CurrentSelection.Changed += this.OnCurrentSelectionChanged;
+            
+            SaveAsJsonFileAsyncCommand = new AsyncRelayCommand(SaveAsJsonFileAsync, CanBeSavedAsJsonFile, true);
 
             SaveAsJsonFileCommand = new RelayCommand(SaveAsJsonFile, CanBeSavedAsJsonFile);
-
         }
 
-        public void SaveAsJsonFile(object _)
-        {
+        #endregion
 
-            Forms.SaveFileDialog saveFileDialog = new Forms.SaveFileDialog()
+        #region Develop
+        private void TestExe()
+        {
+            System.Windows.MessageBox.Show("RAN!");
+        }
+
+        private bool CanTestExe()
+        {
+            return false;
+        }
+        #endregion
+
+        #region Methods
+
+        private void SaveAsJsonFile(object commandParameter)
+        {
+            var saveFileDialog = new Forms.SaveFileDialog()
             {
                 Filter = "JavaScript Object Notation|* json",
                 Title = "Save Selected ModelItems Properties"
@@ -48,21 +75,15 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
 
             if (saveFileDialog.ShowDialog() == Forms.DialogResult.OK)
             {
+                string filePath;
+                string PATTERN = @"^.*\.(json)$";
 
-                var output = NavisworksDevHelper.ModelItem.CategoriesPropertiesHelper.SerializeModelItemsProperties(SelectedModelItems);
+                filePath = !Regex.IsMatch(saveFileDialog.FileName, PATTERN, RegexOptions.IgnoreCase) ? $"{saveFileDialog.FileName}.json" : saveFileDialog.FileName;
 
-                string pattern = @"^.*\.(json)$";
 
                 try
                 {
-                    if (!Regex.IsMatch(saveFileDialog.FileName, pattern))
-                    {
-                        System.IO.File.WriteAllText($"{saveFileDialog.FileName}.json", output.ToString());
-                    }
-                    else
-                    {
-                        System.IO.File.WriteAllText(saveFileDialog.FileName, output.ToString());
-                    }
+                    NavisworksDevHelper.ModelItem.CategoriesPropertiesHelper.SerializeModelItems(SelectedModelItems, filePath, false, false);
                 }
                 catch (Exception e)
                 {
@@ -70,14 +91,13 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
                     var result = Windows.MessageBox.Show(e.Message, e.StackTrace, Windows.MessageBoxButton.OKCancel);
                     if (result == Windows.MessageBoxResult.OK)
                     {
-                        SaveAsJsonFile(_);
+                        SaveAsJsonFile(commandParameter);
                     }
                 }
-                
+
             }
         }
-        
-        private bool CanBeSavedAsJsonFile(object _)
+        private bool CanBeSavedAsJsonFile(object commandParameter)
         {
 
             if (SelectedModelItems is null)
@@ -92,18 +112,65 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
             {
                 return false;
             }
-            
-        }
 
-        
-        private void CurrentSelection_Changed(object sender, EventArgs e)
+        }
+        private void OnCurrentSelectionChanged(object sender, EventArgs e)
         {
             // if a real document still not loaded then do nothing
-            if (Application.ActiveDocument != null && !Application.ActiveDocument.IsClear)
+            if (Application.ActiveDocument != null)
             {
-                SelectedModelItems = ((Document)sender).CurrentSelection.SelectedItems;
+                if (!Application.ActiveDocument.IsClear)
+                {
+                    SelectedModelItems = ((Document)sender).CurrentSelection.SelectedItems;
+                }
             }
-        } 
+        }
 
+        #endregion
+
+        #region Unused Members
+        public ICommand SaveAsJsonFileAsyncCommand { get; set; }
+        public async Task SaveAsJsonFileAsync(object commandParameter)
+        {
+
+            var saveFileDialog = new Forms.SaveFileDialog()
+            {
+                Filter = "JavaScript Object Notation|* json",
+                Title = "Save Selected ModelItems Properties"
+            };
+
+            if (saveFileDialog.ShowDialog() == Forms.DialogResult.OK)
+            {
+                string filePath;
+                string PATTERN = @"^.*\.(json)$";
+
+                filePath = !Regex.IsMatch(saveFileDialog.FileName, PATTERN, RegexOptions.IgnoreCase) ? $"{saveFileDialog.FileName}.json" : saveFileDialog.FileName;
+
+
+                try
+                {
+                    IsSavingJsonFile = true;
+                    await Task.Run(() =>
+                    {
+                        NavisworksDevHelper.ModelItem.CategoriesPropertiesHelper.SerializeModelItems(SelectedModelItems, filePath, false, true);
+                        System.Windows.MessageBox.Show("File Saved Successfully");
+                    });
+                }
+                catch (Exception e)
+                {
+                    var result = Windows.MessageBox.Show(e.Message, e.StackTrace, Windows.MessageBoxButton.OKCancel);
+                    if (result == Windows.MessageBoxResult.OK)
+                    {
+                        await SaveAsJsonFileAsync(commandParameter);
+                    }
+                }
+                finally
+                {
+                    IsSavingJsonFile = false;
+                }
+            }
+        }
+
+        #endregion
     }
 }

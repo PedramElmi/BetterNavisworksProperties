@@ -17,12 +17,17 @@
     </UserControl.DataContext>
 
     <UserControl.Resources>
+        
+        <!--#region Style -->
+        
         <Style
             TargetType="TextBlock">
             <Setter
                 Property="FontFamily"
                 Value="Tahoma" />
         </Style>
+        
+        <!--#endregion-->
 
         <!--#region Converters -->
 
@@ -37,16 +42,18 @@
     </UserControl.Resources>
 
     <DockPanel>
-        <!--list of selected model items-->
+        <!--save model items as json file-->
         <Button
             DockPanel.Dock="Bottom"
-            Content="Save"
+            Content="Save Selected Tree as .json"
             FontFamily="Tahoma"
             Command="{Binding Path=SaveAsJsonFileCommand}"
             FontSize="14"
             FontWeight="Normal"
             FontStyle="Normal"
             Background="#FFF3BB6A" />
+        
+        <!--list of selected model items and their data properties-->
         <ScrollViewer
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Auto">
