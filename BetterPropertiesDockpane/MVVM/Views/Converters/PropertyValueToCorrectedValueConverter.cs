@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using NavisworksDevHelper;
 
 namespace BetterPropertiesDockpane.MVVM.Views.Converters
 {
@@ -13,7 +14,7 @@ namespace BetterPropertiesDockpane.MVVM.Views.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return NavisworksDevHelper.ModelItem.CategoriesPropertiesHelper.GetDisplayableVariantData(value as VariantData);
+            return (value as VariantData).ToCleanedString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

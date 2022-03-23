@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BetterPropertiesDockpane</RootNamespace>
-    <AssemblyName>BetterPropertiesDockpane</AssemblyName>
+    <AssemblyName>BetterPropertiesDockpane.PedramElmi</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Program Files\Autodesk\Navisworks Manage 2022\Plugins\BetterPropertiesDockpane\</OutputPath>
+    <OutputPath>C:\Users\Pedram\AppData\Roaming\Autodesk\Navisworks Manage 2022\Plugins\BetterPropertiesDockpane.PedramElmi\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -80,22 +80,41 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assemblies\Autodesk.Navisworks.Api.dll" />
-    <Resource Include="Images\GUID-197CB0CC-4CBB-4308-A42C-0B7046B05392.png" />
-    <Resource Include="Images\GUID-2D8532F2-122E-4218-9E22-44C4BC834F7C.png" />
-    <Resource Include="Images\GUID-3BC23219-691D-4C01-A03C-0B0D0208FE9E.png" />
-    <Resource Include="Images\GUID-45488727-EFBB-42D4-BDF8-3C49E3C314AF.png" />
-    <Resource Include="Images\GUID-4BCD09CF-FF0C-4B88-B473-B1025A17C100.png" />
-    <Resource Include="Images\GUID-7AD510FA-7C48-415E-9579-D996820D8BC1.png" />
-    <Resource Include="Images\GUID-8C08B821-22E1-45BA-9421-D9C5E577D4B0.png" />
-    <Resource Include="Images\GUID-A12DD8E6-A4BE-401A-BB86-6C80E4C4C1FB.png" />
-    <Resource Include="Images\GUID-D66522E4-D61B-45E1-A44B-424663BAE11C.png" />
-    <Resource Include="Images\GUID-F178FAC1-ACD0-457B-8831-42ADBD7465FE.png" />
+    <Resource Include="Images\GUID-197CB0CC-4CBB-4308-A42C-0B7046B05392.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\GUID-2D8532F2-122E-4218-9E22-44C4BC834F7C.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\GUID-3BC23219-691D-4C01-A03C-0B0D0208FE9E.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\GUID-45488727-EFBB-42D4-BDF8-3C49E3C314AF.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\GUID-4BCD09CF-FF0C-4B88-B473-B1025A17C100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\GUID-7AD510FA-7C48-415E-9579-D996820D8BC1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\GUID-8C08B821-22E1-45BA-9421-D9C5E577D4B0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\GUID-A12DD8E6-A4BE-401A-BB86-6C80E4C4C1FB.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\GUID-D66522E4-D61B-45E1-A44B-424663BAE11C.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\GUID-F178FAC1-ACD0-457B-8831-42ADBD7465FE.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NavisworksDevHelper\NavisworksDevHelper.csproj">
+    <ProjectReference Include="..\..\NavisworksDevHelper\src\NavisworksDevHelper.csproj">
       <Project>{f6b3f0f1-6c96-4be1-99a7-ecf299b66f14}</Project>
       <Name>NavisworksDevHelper</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

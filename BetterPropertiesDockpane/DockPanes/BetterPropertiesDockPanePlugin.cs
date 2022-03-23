@@ -11,7 +11,7 @@ using BetterPropertiesDockpane.MVVM.Views;
 
 namespace BetterPropertiesDockpane.DockPanes
 {
-    [Plugin(name: "BetterProperties", developerId: "PDEL", DisplayName = "Better Properties")]
+    [Plugin(name: "BetterProperties", developerId: "PedramElmi", DisplayName = "Better Properties")]
     [DockPanePlugin(preferredWidth: 300, preferredHeight: 500, AutoScroll = false, FixedSize = false, MinimumHeight = 0, MinimumWidth = 0)]
     public class BetterPropertiesDockPanePlugin : DockPanePlugin
     {

@@ -62,7 +62,7 @@
                 SelectionMode="Extended">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Expander>
+                        <Expander IsExpanded="False">
                             <Expander.Header>
 
                                 <StackPanel
@@ -90,7 +90,7 @@
                                 SelectionMode="Extended">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Expander>
+                                        <Expander IsExpanded="False">
                                             <Expander.Header>
                                                 <TextBlock
                                                     Text="{Binding Path=DisplayName}"
