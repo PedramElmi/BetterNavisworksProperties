@@ -32,10 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autodesk.Navisworks.Api, Version=19.0.1366.6, Culture=neutral, PublicKeyToken=d85e58fa5af9b484, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\Autodesk.Navisworks.Api.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Autodesk.Navisworks.Api">
+      <HintPath>..\..\..\Program Files\Autodesk\Navisworks Manage 2022\Autodesk.Navisworks.Api.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -56,10 +54,12 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DockPanes\BetterPropertiesDockPanePlugin.cs" />
+    <Compile Include="Plugins\BetterPropertiesAddInPlugin.cs" />
+    <Compile Include="Plugins\BetterPropertiesDockPanePlugin.cs" />
     <Compile Include="Helper\AsyncRelayCommand.cs" />
     <Compile Include="Helper\ObservableObject.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
+    <Compile Include="Application.cs" />
     <Compile Include="MVVM\ViewModels\BetterPropertiesViewModel.cs" />
     <Compile Include="MVVM\Views\BetterPropertiesView.xaml.cs">
       <DependentUpon>BetterPropertiesView.xaml</DependentUpon>
@@ -79,7 +79,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assemblies\Autodesk.Navisworks.Api.dll" />
     <Resource Include="Images\GUID-197CB0CC-4CBB-4308-A42C-0B7046B05392.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

@@ -8,18 +8,26 @@ using Autodesk.Navisworks.Api.Plugins;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using BetterPropertiesDockpane.MVVM.Views;
+using NavisworksApiApplication = Autodesk.Navisworks.Api.Application;
 
-namespace BetterPropertiesDockpane.DockPanes
+namespace BetterPropertiesDockpane.Plugins
 {
-    [Plugin(name: "BetterProperties", developerId: "PedramElmi", DisplayName = "Better Properties")]
+    [Plugin(name: "BetterPropertiesDockPane", developerId: "PedramElmi", DisplayName = "Better Properties")]
     [DockPanePlugin(preferredWidth: 300, preferredHeight: 500, AutoScroll = false, FixedSize = false, MinimumHeight = 0, MinimumWidth = 0)]
     public class BetterPropertiesDockPanePlugin : DockPanePlugin
     {
 
+        public BetterPropertiesDockPanePlugin()
+        {
+            Application.DockPanePlugin = this;
+        }
+
+        public Control ControlPane { get; set; }
+
         public override Control CreateControlPane()
         {
             //create an ElementHost
-            ElementHost elementHost = new ElementHost
+            var elementHost = new ElementHost
             {
 
                 //assign the control
@@ -30,8 +38,9 @@ namespace BetterPropertiesDockpane.DockPanes
 
             elementHost.CreateControl();
 
-            elementHost.ParentChanged += this.ElementHost_ParentChanged;
+            elementHost.ParentChanged += ElementHost_ParentChanged;
 
+            ControlPane = elementHost;
 
             //return the ElementHost
             return elementHost;
@@ -50,6 +59,36 @@ namespace BetterPropertiesDockpane.DockPanes
             }
         }
 
+        public override void OnActivePaneChanged(bool isActive)
+        {
+            base.OnActivePaneChanged(isActive);
+        }
+
+        public override void OnVisibleChanged()
+        {
+            if (Application.ViewModel is null)
+            {
+                base.OnVisibleChanged();
+                return;
+            }
+
+            if (Visible)
+            {
+                NavisworksApiApplication.ActiveDocument.CurrentSelection.Changed += Application.ViewModel.OnCurrentSelectionChanged;
+            }
+            else
+            {
+                Application.ViewModel.SelectedModelItems?.Clear();
+                NavisworksApiApplication.ActiveDocument.CurrentSelection.Changed -= Application.ViewModel.OnCurrentSelectionChanged;
+            }
+
+            base.OnVisibleChanged();
+        }
+
+        protected override void OnUnloading()
+        {
+            base.OnUnloading();
+        }
 
         public override void DestroyControlPane(Control pane)
         {

@@ -1,10 +1,14 @@
 ﻿using Autodesk.Navisworks.Api;
 using BetterPropertiesDockpane.Helper;
+using NavisworksDevHelper;
+using NavisworksDevHelper.ModelItemHelpers;
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Forms = System.Windows.Forms;
+using NavisworksApiApplication = Autodesk.Navisworks.Api.Application;
 using Windows = System.Windows;
 
 namespace BetterPropertiesDockpane.MVVM.ViewModels
@@ -14,6 +18,7 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
         #region Private Fields
 
         private bool _isSavingJsonFile;
+        private int _modelItemscapacity = 100;
         private ModelItemCollection _selectedModelItems;
 
         #endregion Private Fields
@@ -22,9 +27,11 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
 
         public BetterPropertiesViewModel()
         {
+            Application.ViewModel = this;
+
             IsSavingJsonFile = false;
 
-            Application.ActiveDocument.CurrentSelection.Changed += this.OnCurrentSelectionChanged;
+            //NavisworksApiApplication.ActiveDocument.CurrentSelection.Changed += this.OnCurrentSelectionChanged;
 
             SaveAsJsonFileAsyncCommand = new AsyncRelayCommand(SaveAsJsonFileAsync, CanBeSavedAsJsonFile, true);
 
@@ -45,6 +52,12 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
             }
         }
 
+        public int ModelItemsCapacity
+        {
+            get { return _modelItemscapacity; }
+            set { _modelItemscapacity = value; OnPropertyChanged(); }
+        }
+
         public ICommand SaveAsJsonFileAsyncCommand { get; set; }
 
         public ICommand SaveAsJsonFileCommand { get; set; }
@@ -58,6 +71,20 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
         #endregion Public Properties
 
         #region Public Methods
+
+        public void OnCurrentSelectionChanged(object sender, EventArgs e)
+        {
+            // if a real document still not loaded then do nothing
+            if (NavisworksApiApplication.ActiveDocument != null)
+            {
+                if (!NavisworksApiApplication.ActiveDocument.IsClear)
+                {
+                    var modelItemCollection = new ModelItemCollection();
+                    modelItemCollection.AddRange(((Document)sender).CurrentSelection.SelectedItems);
+                    SelectedModelItems = modelItemCollection;
+                }
+            }
+        }
 
         public async Task SaveAsJsonFileAsync(object commandParameter)
         {
@@ -79,7 +106,7 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
                     IsSavingJsonFile = true;
                     await Task.Run(() =>
                     {
-                        NavisworksDevHelper.ModelItemHelpers.CategoriesPropertiesHelper.SerializeModelItems(SelectedModelItems, filePath, false, true);
+                        NavisworksApiApplication.ActiveDocument.CurrentSelection.SelectedItems.JsonSerialize(filePath, namingStrategy: NamingStrategy.CamelCase);
                         System.Windows.MessageBox.Show("File Saved Successfully");
                     });
                 }
@@ -118,18 +145,6 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
             }
         }
 
-        private void OnCurrentSelectionChanged(object sender, EventArgs e)
-        {
-            // if a real document still not loaded then do nothing
-            if (Application.ActiveDocument != null)
-            {
-                if (!Application.ActiveDocument.IsClear)
-                {
-                    SelectedModelItems = ((Document)sender).CurrentSelection.SelectedItems;
-                }
-            }
-        }
-
         private void SaveAsJsonFile(object commandParameter)
         {
             var saveFileDialog = new Forms.SaveFileDialog()
@@ -147,7 +162,7 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
 
                 try
                 {
-                    NavisworksDevHelper.ModelItemHelpers.CategoriesPropertiesHelper.SerializeModelItems(SelectedModelItems, filePath, false, false);
+                    NavisworksApiApplication.ActiveDocument.CurrentSelection.SelectedItems.JsonSerialize(filePath, namingStrategy: NamingStrategy.CamelCase);
                 }
                 catch (Exception e)
                 {
