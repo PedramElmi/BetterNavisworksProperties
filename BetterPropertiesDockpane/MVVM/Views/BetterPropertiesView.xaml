@@ -42,6 +42,7 @@
     </UserControl.Resources>
 
     <DockPanel>
+
         <!--save model items as json file-->
         <Button
             DockPanel.Dock="Bottom"
@@ -52,17 +53,17 @@
             FontWeight="Normal"
             FontStyle="Normal"
             Background="#FFF3BB6A" />
-        
+
         <!--list of selected model items and their data properties-->
         <ScrollViewer
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Auto">
             <ListView
-                ItemsSource="{Binding Path=SelectedModelItems}"
-                SelectionMode="Extended">
+                ItemsSource="{Binding Path=Document.SelectedModelItems}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Expander IsExpanded="False">
+                        <Expander
+                            IsExpanded="False">
                             <Expander.Header>
 
                                 <StackPanel
@@ -90,7 +91,8 @@
                                 SelectionMode="Extended">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Expander IsExpanded="False">
+                                        <Expander
+                                            IsExpanded="False">
                                             <Expander.Header>
                                                 <TextBlock
                                                     Text="{Binding Path=DisplayName}"

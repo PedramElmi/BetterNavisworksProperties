@@ -1,14 +1,13 @@
-﻿using Autodesk.Navisworks.Api;
-using BetterPropertiesDockpane.Helper;
+﻿using BetterPropertiesDockpane.MVVM.Models;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using NavisworksDevHelper;
 using NavisworksDevHelper.ModelItemHelpers;
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using Api = Autodesk.Navisworks.Api;
 using Forms = System.Windows.Forms;
-using NavisworksApiApplication = Autodesk.Navisworks.Api.Application;
 using Windows = System.Windows;
 
 namespace BetterPropertiesDockpane.MVVM.ViewModels
@@ -17,9 +16,8 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
     {
         #region Private Fields
 
-        private bool _isSavingJsonFile;
-        private int _modelItemscapacity = 100;
-        private ModelItemCollection _selectedModelItems;
+        private Document _document = Application.Document;
+        private bool _isSavingJsonFile = false;
 
         #endregion Private Fields
 
@@ -27,15 +25,8 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
 
         public BetterPropertiesViewModel()
         {
-            Application.ViewModel = this;
-
-            IsSavingJsonFile = false;
-
-            //NavisworksApiApplication.ActiveDocument.CurrentSelection.Changed += this.OnCurrentSelectionChanged;
-
-            SaveAsJsonFileAsyncCommand = new AsyncRelayCommand(SaveAsJsonFileAsync, CanBeSavedAsJsonFile, true);
-
             SaveAsJsonFileCommand = new RelayCommand(SaveAsJsonFile, CanBeSavedAsJsonFile);
+            Api.Application.ActiveDocument.CurrentSelection.Changed += OnCurrentSelectionChanged;
         }
 
         #endregion Public Constructors
@@ -47,44 +38,21 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
             get => _isSavingJsonFile;
             set
             {
-                _isSavingJsonFile = value;
-                OnPropertyChanged();
+                SetProperty(ref _isSavingJsonFile, value);
             }
         }
 
-        public int ModelItemsCapacity
-        {
-            get { return _modelItemscapacity; }
-            set { _modelItemscapacity = value; OnPropertyChanged(); }
-        }
-
-        public ICommand SaveAsJsonFileAsyncCommand { get; set; }
-
-        public ICommand SaveAsJsonFileCommand { get; set; }
-
-        public ModelItemCollection SelectedModelItems
-        {
-            get => _selectedModelItems;
-            private set { _selectedModelItems = value; OnPropertyChanged(); }
-        }
+        public RelayCommand SaveAsJsonFileCommand { get; set; }
 
         #endregion Public Properties
 
-        #region Public Methods
+        #region Private Properties
 
-        public void OnCurrentSelectionChanged(object sender, EventArgs e)
-        {
-            // if a real document still not loaded then do nothing
-            if (NavisworksApiApplication.ActiveDocument != null)
-            {
-                if (!NavisworksApiApplication.ActiveDocument.IsClear)
-                {
-                    var modelItemCollection = new ModelItemCollection();
-                    modelItemCollection.AddRange(((Document)sender).CurrentSelection.SelectedItems);
-                    SelectedModelItems = modelItemCollection;
-                }
-            }
-        }
+        public Document Document { get => _document; }
+
+        #endregion Private Properties
+
+        #region Public Methods
 
         public async Task SaveAsJsonFileAsync(object commandParameter)
         {
@@ -106,7 +74,7 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
                     IsSavingJsonFile = true;
                     await Task.Run(() =>
                     {
-                        NavisworksApiApplication.ActiveDocument.CurrentSelection.SelectedItems.JsonSerialize(filePath, namingStrategy: NamingStrategy.CamelCase);
+                        Api.Application.ActiveDocument.CurrentSelection.SelectedItems.JsonSerialize(filePath, namingStrategy: NamingStrategy.CamelCase);
                         System.Windows.MessageBox.Show("File Saved Successfully");
                     });
                 }
@@ -129,13 +97,17 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
 
         #region Private Methods
 
-        private bool CanBeSavedAsJsonFile(object commandParameter)
+        private bool CanBeSavedAsJsonFile()
         {
-            if (SelectedModelItems is null)
+            if (Document.SelectedModelItems is null)
             {
                 return false;
             }
-            else if (SelectedModelItems.Count != 0)
+            if (IsSavingJsonFile)
+            {
+                return false;
+            }
+            else if (Document.SelectedModelItems.Count != 0)
             {
                 return true;
             }
@@ -145,7 +117,12 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
             }
         }
 
-        private void SaveAsJsonFile(object commandParameter)
+        private void OnCurrentSelectionChanged(object sender, EventArgs e)
+        {
+            SaveAsJsonFileCommand.NotifyCanExecuteChanged();
+        }
+
+        private void SaveAsJsonFile()
         {
             var saveFileDialog = new Forms.SaveFileDialog()
             {
@@ -162,14 +139,14 @@ namespace BetterPropertiesDockpane.MVVM.ViewModels
 
                 try
                 {
-                    NavisworksApiApplication.ActiveDocument.CurrentSelection.SelectedItems.JsonSerialize(filePath, namingStrategy: NamingStrategy.CamelCase);
+                    Api.Application.ActiveDocument.CurrentSelection.SelectedItems.JsonSerialize(filePath, namingStrategy: NamingStrategy.CamelCase);
                 }
                 catch (Exception e)
                 {
                     var result = Windows.MessageBox.Show(e.Message, e.StackTrace, Windows.MessageBoxButton.OKCancel);
                     if (result == Windows.MessageBoxResult.OK)
                     {
-                        SaveAsJsonFile(commandParameter);
+                        SaveAsJsonFile();
                     }
                 }
             }

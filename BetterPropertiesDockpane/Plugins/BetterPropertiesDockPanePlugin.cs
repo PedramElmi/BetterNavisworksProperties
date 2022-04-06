@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.Plugins;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using BetterPropertiesDockpane.MVVM.Views;
-using NavisworksApiApplication = Autodesk.Navisworks.Api.Application;
+using Api = Autodesk.Navisworks.Api;
+using System.Reflection;
 
 namespace BetterPropertiesDockpane.Plugins
 {
@@ -16,7 +16,6 @@ namespace BetterPropertiesDockpane.Plugins
     [DockPanePlugin(preferredWidth: 300, preferredHeight: 500, AutoScroll = false, FixedSize = false, MinimumHeight = 0, MinimumWidth = 0)]
     public class BetterPropertiesDockPanePlugin : DockPanePlugin
     {
-
         public BetterPropertiesDockPanePlugin()
         {
             Application.DockPanePlugin = this;
@@ -66,21 +65,13 @@ namespace BetterPropertiesDockpane.Plugins
 
         public override void OnVisibleChanged()
         {
-            if (Application.ViewModel is null)
+            if (Api.Application.ActiveDocument.IsClear)
             {
                 base.OnVisibleChanged();
                 return;
             }
 
-            if (Visible)
-            {
-                NavisworksApiApplication.ActiveDocument.CurrentSelection.Changed += Application.ViewModel.OnCurrentSelectionChanged;
-            }
-            else
-            {
-                Application.ViewModel.SelectedModelItems?.Clear();
-                NavisworksApiApplication.ActiveDocument.CurrentSelection.Changed -= Application.ViewModel.OnCurrentSelectionChanged;
-            }
+            Application.Document.OnDockPaneVisibilityChanged(this, Visible);
 
             base.OnVisibleChanged();
         }
